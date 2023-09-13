@@ -1,5 +1,5 @@
 {
-  "name": "sroze/companienv",
+  "name": "portrino/companienv",
   "description": "Companion for .env files",
   "license": "MIT",
   "type": "library",
@@ -12,10 +12,14 @@
     {
       "name": "Samuel ROZE",
       "email": "samuel.roze@gmail.com"
+    },
+    {
+      "name": "Axel Böswetter",
+      "email": "boeswetter@portrino.de"
     }
   ],
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.2",
     "jackiedo/dotenv-editor": "^2.0",
     "symfony/console": "^3.4 || ^4.0 || ^5.0 || ^6.0",
     "symfony/dotenv": "^3.4 || ^4.0 || ^5.0 || ^6.0",

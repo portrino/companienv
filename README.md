@@ -16,9 +16,9 @@ Companienv will helps you manage the `.env` files, from a reference `.env.dist` 
 
 ## Usage
 
-1. Require `sroze/companienv` as your project dependency:
+1. Require `portrino/companienv` as your project dependency:
 ```
-composer req sroze/companienv
+composer req portrino/companienv
 ```
 
 2. Run your companion:
