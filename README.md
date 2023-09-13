@@ -1,3 +1,6 @@
+[![Latest Stable Version](https://poser.pugx.org/portrino/companienv/v/stable)](https://packagist.org/packages/portrino/companienv)
+![CI](https://github.com/portrino/companienv/actions/workflows/ci.yml/badge.svg)
+
 # Companienv
 
 Your companion for `.env` files. Everybody knows about [12 factor](https://12factor.net/) and [environments variables](https://12factor.net/config) now.

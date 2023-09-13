@@ -32,6 +32,9 @@
     "phpspec/phpspec": "^4.3 || ^5.0 || ^6.0 || ^7.0",
     "phpstan/phpstan": "^1.10"
   },
+  "replace": {
+    "sroze/companienv": "*"
+  },
   "autoload": {
     "psr-0": {
       "Companienv": "src/"
