@@ -95,12 +95,22 @@ class Companion
         $reader = (new DotenvReader(new ParserV3()))->load($this->envFileName);
         foreach ($reader->entries(true) as $entry) {
             if (isset($entry['parsed_data'])) {
-                $writer->appendSetter(
-                    $entry['parsed_data']['key'],
-                    trim($entry['parsed_data']['value'], '"'),
-                    $entry['parsed_data']['comment'],
-                    $entry['parsed_data']['export']
-                );
+                switch ($entry['parsed_data']['type']) {
+                    case 'comment':
+                        $writer->appendComment($entry['parsed_data']['comment']);
+                        break;
+                    case 'empty':
+                        $writer->appendEmpty();
+                        break;
+                    case 'setter':
+                        $writer->appendSetter(
+                            $entry['parsed_data']['key'],
+                            trim($entry['parsed_data']['value'], '"'),
+                            $entry['parsed_data']['comment'],
+                            $entry['parsed_data']['export']
+                        );
+                        break;
+                }
             }
         }
 
