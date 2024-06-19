@@ -34,7 +34,7 @@
     "phpstan/phpstan": "^1.10",
     "phpstan/phpstan-deprecation-rules": "^1.1",
     "phpstan/phpstan-strict-rules": "^1.5",
-    "typo3/coding-standards": "^0.8"
+    "typo3/coding-standards": "^0.7"
   },
   "replace": {
     "sroze/companienv": "*"
