@@ -3,6 +3,7 @@
 namespace Companienv;
 
 use Companienv\DotEnv\Block;
+use Companienv\DotEnv\File;
 use Companienv\DotEnv\MissingVariable;
 use Companienv\DotEnv\Parser;
 use Companienv\IO\FileSystem\FileSystem;
@@ -14,11 +15,11 @@ use Jackiedo\DotenvEditor\Workers\Parsers\ParserV3;
 
 class Companion
 {
-    private $fileSystem;
-    private $interaction;
-    private $reference;
-    private $extension;
-    private $envFileName;
+    private FileSystem $fileSystem;
+    private Interaction $interaction;
+    private File $reference;
+    private Extension $extension;
+    private string $envFileName;
 
     public function __construct(FileSystem $fileSystem, Interaction $interaction, Extension $extension, string $envFileName = '.env', string $distFileName = '.env.dist')
     {
@@ -29,7 +30,7 @@ class Companion
         $this->envFileName = $envFileName;
     }
 
-    public function fillGaps()
+    public function fillGaps(): void
     {
         $missingVariables = $this->getVariablesRequiringValues();
         if (count($missingVariables) === 0) {
@@ -45,7 +46,7 @@ class Companion
             $this->interaction->writeln([
                 '',
                 '<comment>I let you think about it then. Re-run the command to get started again.</comment>',
-                ''
+                '',
             ]);
 
             return;
@@ -56,22 +57,25 @@ class Companion
         }
     }
 
-    private function fillBlockGaps(Block $block, array $missingVariables)
+    /**
+     * @param MissingVariable[] $missingVariables
+     */
+    private function fillBlockGaps(Block $block, array $missingVariables): void
     {
         $variablesInBlock = $block->getVariablesInBlock($missingVariables);
-        if (count($variablesInBlock) == 0) {
+        if (count($variablesInBlock) === 0) {
             return;
         }
 
-        if (!empty($title = $block->getTitle())) {
+        if ($block->getTitle() !== '') {
             $this->interaction->writeln([
                 '',
                 '<info>' . $block->getTitle() . '</info>',
             ]);
         }
 
-        if (!empty($description = $block->getDescription())) {
-            $this->interaction->writeln($description);
+        if ($block->getDescription() !== '') {
+            $this->interaction->writeln($block->getDescription());
         }
 
         $this->interaction->writeln('');
@@ -83,7 +87,7 @@ class Companion
         }
     }
 
-    private function writeVariable(string $name, string $value)
+    private function writeVariable(string $name, ?string $value = null): void
     {
         if (!$this->fileSystem->exists($this->envFileName)) {
             $this->fileSystem->write($this->envFileName, '');
@@ -126,7 +130,7 @@ class Companion
     /**
      * @return MissingVariable[]
      */
-    private function getVariablesRequiringValues()
+    private function getVariablesRequiringValues(): array
     {
         $variablesInFile = $this->getDefinedVariablesHash();
         $missingVariables = [];
@@ -144,7 +148,10 @@ class Companion
         return $missingVariables;
     }
 
-    public function getDefinedVariablesHash()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getDefinedVariablesHash(): array
     {
         $variablesInFile = [];
         if ($this->fileSystem->exists($this->envFileName)) {
@@ -155,12 +162,12 @@ class Companion
         return $variablesInFile;
     }
 
-    public function askConfirmation(string $question) : bool
+    public function askConfirmation(string $question): bool
     {
         return $this->interaction->askConfirmation($question);
     }
 
-    public function ask(string $question, string $default = null) : string
+    public function ask(string $question, string $default = ''): string
     {
         return $this->interaction->ask($question, $default);
     }

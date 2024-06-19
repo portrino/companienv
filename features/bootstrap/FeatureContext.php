@@ -1,7 +1,6 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Hook\Scope\AfterFeatureScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
@@ -13,7 +12,6 @@ use Companienv\IO\InMemoryInteraction;
 
 class FeatureContext implements Context
 {
-
     private $interaction;
 
     private $fileSystem;

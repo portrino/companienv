@@ -7,7 +7,7 @@ use Composer\IO\IOInterface;
 
 class InteractionViaComposer implements Interaction
 {
-    private $io;
+    private IOInterface $io;
 
     public function __construct(IOInterface $io)
     {
@@ -25,7 +25,7 @@ class InteractionViaComposer implements Interaction
         return $this->io->askConfirmation($question);
     }
 
-    public function ask(string $question, string $default = null): string
+    public function ask(string $question, string $default = ''): string
     {
         if (!$this->io->isInteractive()) {
             $this->writeln(sprintf('Automatically returned "%s" in non-interactive mode', $default));
@@ -36,8 +36,8 @@ class InteractionViaComposer implements Interaction
         return $this->io->ask($question, $default);
     }
 
-    public function writeln($messageOrMessages)
+    public function writeln(array|string $messageOrMessages): void
     {
-        return $this->io->write($messageOrMessages);
+        $this->io->write($messageOrMessages);
     }
 }

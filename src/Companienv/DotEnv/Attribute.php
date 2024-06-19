@@ -4,9 +4,17 @@ namespace Companienv\DotEnv;
 
 class Attribute
 {
-    private $name;
-    private $variableNames;
-    private $labels;
+    private string $name;
+
+    /**
+     * @var string[]
+     */
+    private array $variableNames;
+
+    /**
+     * @var string[]
+     */
+    private array $labels;
 
     /**
      * @param string $name
@@ -25,12 +33,18 @@ class Attribute
         return $this->name;
     }
 
+    /**
+     * @return string[]
+     */
     public function getVariableNames(): array
     {
         return $this->variableNames;
     }
 
-    public function getLabels()
+    /**
+     * @return string[]
+     */
+    public function getLabels(): array
     {
         return $this->labels;
     }

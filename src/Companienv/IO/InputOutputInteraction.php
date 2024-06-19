@@ -9,8 +9,8 @@ use Symfony\Component\Console\Question\Question;
 
 class InputOutputInteraction implements Interaction
 {
-    private $input;
-    private $output;
+    private InputInterface $input;
+    private OutputInterface $output;
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {
@@ -18,24 +18,24 @@ class InputOutputInteraction implements Interaction
         $this->output = $output;
     }
 
-    public function askConfirmation(string $question) : bool
+    public function askConfirmation(string $question): bool
     {
-        return in_array(strtolower($this->ask($question, 'y')), ['y', 'yes']);
+        return in_array(strtolower($this->ask($question, 'y')), ['y', 'yes'], true);
     }
 
-    public function ask(string $question, string $default = null) : string
+    public function ask(string $question, string $default = ''): string
     {
         $answer = (new QuestionHelper())->ask($this->input, $this->output, new Question($question, $default));
 
-        if (null === $answer || ('' === $answer && $default !== null)) {
+        if ($answer === null || ($answer === '' && $default !== '')) {
             return $this->ask($question, $default);
         }
 
         return $answer;
     }
 
-    public function writeln($messageOrMessages)
+    public function writeln(array|string $messageOrMessages): void
     {
-        return $this->output->writeln($messageOrMessages);
+        $this->output->writeln($messageOrMessages);
     }
 }

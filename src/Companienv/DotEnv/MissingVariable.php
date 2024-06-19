@@ -4,7 +4,7 @@ namespace Companienv\DotEnv;
 
 class MissingVariable extends Variable
 {
-    private $currentValue;
+    private ?string $currentValue;
 
     public function __construct(Variable $variable, string $currentValue = null)
     {
@@ -16,7 +16,7 @@ class MissingVariable extends Variable
     /**
      * @return string|null
      */
-    public function getCurrentValue()
+    public function getCurrentValue(): ?string
     {
         return $this->currentValue;
     }

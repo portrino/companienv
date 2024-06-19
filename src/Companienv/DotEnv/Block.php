@@ -4,15 +4,21 @@ namespace Companienv\DotEnv;
 
 class Block
 {
-    private $title;
-    private $description;
+    private string $title;
+    private string $description;
 
     /** @var Variable[] */
-    private $variables;
+    private array $variables;
 
     /** @var Attribute[] */
-    private $attributes;
+    private array $attributes;
 
+    /**
+     * @param string $title
+     * @param string $description
+     * @param Variable[] $variables
+     * @param Attribute[] $attributes
+     */
     public function __construct(string $title = '', string $description = '', array $variables = [], array $attributes = [])
     {
         $this->title = $title;
@@ -21,17 +27,17 @@ class Block
         $this->attributes = $attributes;
     }
 
-    public function appendToDescription(string $string)
+    public function appendToDescription(string $string): void
     {
-        $this->description .= ($this->description ? ' ' : '') . $string;
+        $this->description .= ($this->description !== '' ? ' ' : '') . $string;
     }
 
-    public function addVariable(Variable $variable)
+    public function addVariable(Variable $variable): void
     {
         $this->variables[] = $variable;
     }
 
-    public function addAttribute(Attribute $attribute)
+    public function addAttribute(Attribute $attribute): void
     {
         $this->attributes[] = $attribute;
     }
@@ -69,14 +75,14 @@ class Block
      *
      * @return Variable[]
      */
-    public function getVariablesInBlock(array $variables)
+    public function getVariablesInBlock(array $variables): array
     {
         $blockVariableNames = array_map(function (Variable $variable) {
             return $variable->getName();
         }, $this->variables);
 
         return array_filter($variables, function (Variable $variable) use ($blockVariableNames) {
-            return in_array($variable->getName(), $blockVariableNames);
+            return in_array($variable->getName(), $blockVariableNames, true);
         });
     }
 
@@ -85,10 +91,10 @@ class Block
      *
      * @return Variable|null
      */
-    public function getVariable(string $name)
+    public function getVariable(string $name): ?Variable
     {
         foreach ($this->variables as $variable) {
-            if ($variable->getName() == $name) {
+            if ($variable->getName() === $name) {
                 return $variable;
             }
         }
@@ -102,14 +108,14 @@ class Block
      *
      * @return Attribute|null
      */
-    public function getAttribute(string $name, Variable $forVariable = null)
+    public function getAttribute(string $name, Variable $forVariable = null): ?Attribute
     {
         foreach ($this->attributes as $attribute) {
             if (
                 $attribute->getName() == $name
                 && (
                     $forVariable === null
-                    || in_array($forVariable->getName(), $attribute->getVariableNames())
+                    || in_array($forVariable->getName(), $attribute->getVariableNames(), true)
                 )
             ) {
                 return $attribute;

@@ -4,9 +4,12 @@ namespace Companienv\IO;
 
 interface Interaction
 {
-    public function askConfirmation(string $question) : bool;
+    public function askConfirmation(string $question): bool;
 
-    public function ask(string $question, string $default = null) : string;
+    public function ask(string $question, string $default = ''): string;
 
-    public function writeln($messageOrMessages);
+    /**
+     * @param string|string[] $messageOrMessages
+     */
+    public function writeln(array|string $messageOrMessages): void;
 }

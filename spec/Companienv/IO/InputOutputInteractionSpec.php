@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InputOutputInteractionSpec extends ObjectBehavior
 {
-    function let(InputInterface $input, OutputInterface $output)
+    public function let(InputInterface $input, OutputInterface $output): void
     {
         $this->beConstructedWith($input, $output);
     }

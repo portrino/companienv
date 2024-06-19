@@ -4,42 +4,44 @@ namespace Companienv\IO\FileSystem;
 
 class NativePhpFileSystem implements FileSystem
 {
-
-    private $root;
+    private string $root;
 
     public function __construct(string $root)
     {
         $this->root = $root;
     }
 
-    public function write($path, string $contents)
+    /**
+     * @param string $path
+     * @param string|string[] $contents
+     * @return bool
+     */
+    public function write(string $path, string|array $contents): bool
     {
-        $relative = $this->isRelativePath($path);
-        file_put_contents($this->isRelativePath($path) ? $this->realpath($path) : $path, $contents);
+        return (bool)file_put_contents($this->isRelativePath($path) ? $this->realpath($path) : $path, $contents);
     }
 
-    public function exists($path)
+    public function exists(string $path): bool
     {
-        $relative = $this->isRelativePath($path);
         return file_exists($this->isRelativePath($path) ? $this->realpath($path) : $path);
     }
 
-    public function getContents($path)
+    public function getContents(string $path): string
     {
-        return file_get_contents($this->isRelativePath($path) ? $this->realpath($path) : $path);
+        return (string)file_get_contents($this->isRelativePath($path) ? $this->realpath($path) : $path);
     }
 
-    public function delete($path)
+    public function delete(string $path): bool
     {
         return unlink($this->isRelativePath($path) ? $this->realpath($path) : $path);
     }
 
-    public function realpath($path)
+    public function realpath(string $path): string
     {
         return $this->root . DIRECTORY_SEPARATOR . $path;
     }
 
-    protected function isRelativePath($path)
+    protected function isRelativePath(string $path): bool
     {
         return substr($path, 0, 1) !== '/';
     }

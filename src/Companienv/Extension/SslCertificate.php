@@ -10,7 +10,10 @@ use Symfony\Component\Process\Process;
 
 class SslCertificate implements Extension
 {
-    private $populatedVariables = [];
+    /**
+     * @var array<string, mixed>
+     */
+    private array $populatedVariables = [];
 
     /**
      * {@inheritdoc}
@@ -28,27 +31,27 @@ class SslCertificate implements Extension
         if (!$companion->askConfirmation(sprintf(
             'Variables %s represents an SSL certificate. Do you want to automatically generate them? (y) ',
             implode(' and ', array_map(function ($variable) {
-                return '<comment>'.$variable.'</comment>';
+                return '<comment>' . $variable . '</comment>';
             }, $attribute->getVariableNames()))
         ))) {
             // Ensure we don't ask anymore for this variable pair
-            foreach ($attribute->getVariableNames() as $variable) {
-                $this->populatedVariables[$variable] = null;
+            foreach ($attribute->getVariableNames() as $variableName) {
+                $this->populatedVariables[$variableName] = null;
             }
 
             return null;
         }
 
         $domainName = $companion->ask('Enter the domain name for which to generate the self-signed SSL certificate: ');
-        $privateKeyPath = $block->getVariable($privateKeyVariableName = $attribute->getVariableNames()[0])->getValue();
-        $certificateKeyPath = $block->getVariable($certificateVariableName = $attribute->getVariableNames()[1])->getValue();
+        $privateKeyPath = (string)$block->getVariable($privateKeyVariableName = $attribute->getVariableNames()[0])?->getValue();
+        $certificateKeyPath = (string)$block->getVariable($certificateVariableName = $attribute->getVariableNames()[1])?->getValue();
 
         try {
             (new Process([
-                'openssl', 'req', '-x509', '-nodes', '-days', '3650', '-newkey', 'rsa:2048', '-keyout', $companion->getFileSystem()->realpath($privateKeyPath), '-out', $companion->getFileSystem()->realpath($certificateKeyPath), '-subj', '"/C=SS/ST=SS/L=SelfSignedCity/O=SelfSignedOrg/CN=' . $domainName . '"'
+                'openssl', 'req', '-x509', '-nodes', '-days', '3650', '-newkey', 'rsa:2048', '-keyout', $companion->getFileSystem()->realpath($privateKeyPath), '-out', $companion->getFileSystem()->realpath($certificateKeyPath), '-subj', '"/C=SS/ST=SS/L=SelfSignedCity/O=SelfSignedOrg/CN=' . $domainName . '"',
             ]))->mustRun();
         } catch (\Symfony\Component\Process\Exception\RuntimeException $e) {
-            throw new \RuntimeException('Could not have generated the SSL certificate: '.$e->getMessage(), $e->getCode(), $e);
+            throw new \RuntimeException('Could not have generated the SSL certificate: ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         $this->populatedVariables[$privateKeyVariableName] = $privateKeyPath;
@@ -61,7 +64,7 @@ class SslCertificate implements Extension
     /**
      * {@inheritdoc}
      */
-    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null) : int
+    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null): int
     {
         if (null === ($attribute = $block->getAttribute('ssl-certificate', $variable))) {
             return Extension::ABSTAIN;
@@ -70,8 +73,8 @@ class SslCertificate implements Extension
         $fileSystem = $companion->getFileSystem();
 
         return (
-            !$fileSystem->exists($block->getVariable($privateKeyVariableName = $attribute->getVariableNames()[0])->getValue())
-            || !$fileSystem->exists($block->getVariable($attribute->getVariableNames()[1])->getValue())
+            !$fileSystem->exists((string)$block->getVariable($privateKeyVariableName = $attribute->getVariableNames()[0])?->getValue())
+            || !$fileSystem->exists((string)$block->getVariable($attribute->getVariableNames()[1])?->getValue())
         ) ? Extension::VARIABLE_REQUIRED
             : Extension::ABSTAIN;
     }

@@ -10,7 +10,10 @@ use Symfony\Component\Process\Process;
 
 class RsaKeys implements Extension
 {
-    private $populatedVariables = [];
+    /**
+     * @var array<string, mixed>
+     */
+    private array $populatedVariables = [];
 
     /**
      * {@inheritdoc}
@@ -28,7 +31,7 @@ class RsaKeys implements Extension
         if (!$companion->askConfirmation(sprintf(
             'Variables %s represents an RSA public/private key. Do you want to automatically generate them? (y) ',
             implode(' and ', array_map(function ($variable) {
-                return '<comment>'.$variable.'</comment>';
+                return '<comment>' . $variable . '</comment>';
             }, $attribute->getVariableNames()))
         ))) {
             // Ensure we don't ask anymore for this variable pair
@@ -41,8 +44,8 @@ class RsaKeys implements Extension
 
         $fileSystem = $companion->getFileSystem();
         $passPhrase = $companion->ask('Enter pass phrase to protect the keys: ');
-        $privateKeyPath = $block->getVariable($privateKeyVariableName = $attribute->getVariableNames()[0])->getValue();
-        $publicKeyPath = $block->getVariable($publicKeyVariableName = $attribute->getVariableNames()[1])->getValue();
+        $privateKeyPath = (string)$block->getVariable($privateKeyVariableName = $attribute->getVariableNames()[0])?->getValue();
+        $publicKeyPath = (string)$block->getVariable($publicKeyVariableName = $attribute->getVariableNames()[1])?->getValue();
 
         try {
             (new Process(['openssl', 'genrsa', '-out', $fileSystem->realpath($privateKeyPath), '-aes256', '-passout', 'pass:' . $passPhrase, '4096']))->mustRun();
@@ -61,7 +64,7 @@ class RsaKeys implements Extension
     /**
      * {@inheritdoc}
      */
-    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null) : int
+    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null): int
     {
         if (null === ($attribute = $block->getAttribute('rsa-pair', $variable))) {
             return Extension::ABSTAIN;
@@ -70,8 +73,8 @@ class RsaKeys implements Extension
         $fileSystem = $companion->getFileSystem();
 
         return (
-            !$fileSystem->exists($block->getVariable($attribute->getVariableNames()[0])->getValue())
-            || !$fileSystem->exists($block->getVariable($attribute->getVariableNames()[1])->getValue())
+            !$fileSystem->exists((string)$block->getVariable($attribute->getVariableNames()[0])?->getValue())
+            || !$fileSystem->exists((string)$block->getVariable($attribute->getVariableNames()[1])?->getValue())
         ) ? Extension::VARIABLE_REQUIRED
           : Extension::ABSTAIN;
     }

@@ -12,14 +12,15 @@ class AskVariableValues implements Extension
     /**
      * {@inheritdoc}
      */
-    public function getVariableValue(Companion $companion, Block $block, Variable $variable)
+    public function getVariableValue(Companion $companion, Block $block, Variable $variable): string
     {
         $definedVariablesHash = $companion->getDefinedVariablesHash();
-        $defaultValue = ($definedVariablesHash[$variable->getName()] ?? $variable->getValue()) ?: $variable->getValue();
+        $defaultValue = (string)($definedVariablesHash[$variable->getName()] ?? $variable->getValue());
+        $defaultValue = (string)($defaultValue !== '' ? $defaultValue : $variable->getValue());
         $question = sprintf('<comment>%s</comment> ? ', $variable->getName());
 
         if ($defaultValue !== '') {
-            $question .= '('.$defaultValue.') ';
+            $question .= '(' . $defaultValue . ') ';
         }
 
         return $companion->ask($question, $defaultValue);
@@ -28,7 +29,7 @@ class AskVariableValues implements Extension
     /**
      * {@inheritdoc}
      */
-    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null) : int
+    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null): int
     {
         return (
             $currentValue === null || (
