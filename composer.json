@@ -19,18 +19,22 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
+    "php": ">=8.0",
     "jackiedo/dotenv-editor": "^2.0",
-    "symfony/console": "^3.4 || ^4.0 || ^5.0 || ^6.0",
-    "symfony/dotenv": "^3.4 || ^4.0 || ^5.0 || ^6.0",
-    "symfony/process": "^3.4 || ^4.0 || ^5.0 || ^6.0"
+    "symfony/console": "^6.0 || ^7.0",
+    "symfony/dotenv": "^6.0 || ^7.0",
+    "symfony/process": "^6.0 || ^7.0"
   },
   "require-dev": {
-    "behat/behat": "^3.4",
-    "composer/composer": "^1.0 || ^2.0",
-    "ergebnis/composer-normalize": "^2.19",
-    "phpspec/phpspec": "^4.3 || ^5.0 || ^6.0 || ^7.0",
-    "phpstan/phpstan": "^1.10"
+    "behat/behat": "^3.14",
+    "composer/composer": "^2.0",
+    "ergebnis/composer-normalize": "^2.43",
+    "friendsofphp/php-cs-fixer": "^3.47",
+    "phpspec/phpspec": "^7.0",
+    "phpstan/phpstan": "^1.10",
+    "phpstan/phpstan-deprecation-rules": "^1.1",
+    "phpstan/phpstan-strict-rules": "^1.5",
+    "typo3/coding-standards": "^0.8"
   },
   "replace": {
     "sroze/companienv": "*"
@@ -74,13 +78,19 @@
     "ci:php:stan": "./.build/bin/phpstan analyse -c ./build/phpstan.neon --no-progress",
     "ci:static": [
       "@ci:composer:normalize",
+      "@ci:php:cs-fixer",
       "@ci:php:lint",
       "@ci:php:stan"
     ],
     "ci:test": [
       "@ci:test:behat"
     ],
-    "ci:test:behat": "./.build/bin/behat --strict --stop-on-failure"
+    "ci:test:behat": "./.build/bin/behat --strict --stop-on-failure",
+    "fix:php": [
+      "@fix:php:cs",
+      "@fix:php:sniff"
+    ],
+    "fix:php:cs": "./.build/bin/php-cs-fixer fix --config ./build/php-cs-fixer.php"
   },
   "scripts-descriptions": {
     "ci": "Runs all dynamic and static code checks.",

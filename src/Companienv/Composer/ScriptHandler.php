@@ -10,7 +10,7 @@ use Composer\Script\Event;
 
 class ScriptHandler
 {
-    public static function run(Event $event)
+    public static function run(Event $event): void
     {
         $extras = $event->getComposer()->getPackage()->getExtra();
 
@@ -20,7 +20,7 @@ class ScriptHandler
             $configs = [['file' => Application::defaultFile(), 'dist-file' => Application::defaultDistributionFile()]];
         }
 
-        $directory = getcwd();
+        $directory = (string)getcwd();
         foreach ($configs as $config) {
             $companion = new Companion(
                 new NativePhpFileSystem($directory),

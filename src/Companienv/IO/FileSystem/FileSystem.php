@@ -4,11 +4,16 @@ namespace Companienv\IO\FileSystem;
 
 interface FileSystem
 {
-    public function write($path, string $contents);
+    /**
+     * @param string $path
+     * @param string|string[] $contents
+     * @return bool
+     */
+    public function write(string $path, string|array $contents): bool;
 
-    public function exists($path);
+    public function exists(string $path): bool;
 
-    public function getContents($path);
+    public function getContents(string $path): string;
 
-    public function realpath($path);
+    public function realpath(string $path): string;
 }

@@ -7,30 +7,34 @@ use Companienv\Extension\FileToPropagate;
 use Companienv\Extension\OnlyIf;
 use Companienv\Extension\RsaKeys;
 use Companienv\Extension\SslCertificate;
-use Companienv\IO\FileSystem\NativePhpFileSystem;
 use Companienv\Interaction\AskVariableValues;
+use Companienv\IO\FileSystem\NativePhpFileSystem;
 use Companienv\IO\InputOutputInteraction;
+use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends ConsoleApplication
 {
-    private $rootDirectory;
+    private string $rootDirectory;
 
     /** @var Extension[] */
-    private $extensions = [];
+    private array $extensions;
 
+    /**
+     * @param string $rootDirectory
+     * @param Extension[]|null $extensions
+     */
     public function __construct(string $rootDirectory, array $extensions = null)
     {
         parent::__construct('Companienv', '0.0.x-dev');
 
         $this->rootDirectory = $rootDirectory;
-        $this->extensions = $extensions !== null ? $extensions : self::defaultExtensions();
+        $this->extensions = $extensions ?? self::defaultExtensions();
 
-        $this->add(new class([$this, 'companion'], 'companion') extends Command {
+        $this->add(new class ([$this, 'companion'], 'companion') extends Command {
             private $callable;
 
             public function __construct(callable $callable, $name)
@@ -54,7 +58,7 @@ class Application extends ConsoleApplication
         $this->setDefaultCommand('companion', true);
     }
 
-    public function companion(InputInterface $input, OutputInterface $output)
+    public function companion(InputInterface $input, OutputInterface $output): int
     {
         $companion = new Companion(
             new NativePhpFileSystem($this->rootDirectory),
@@ -67,12 +71,15 @@ class Application extends ConsoleApplication
         return 0;
     }
 
-    public function registerExtension(Extension $extension)
+    public function registerExtension(Extension $extension): void
     {
         array_unshift($this->extensions, $extension);
     }
 
-    public static function defaultExtensions()
+    /**
+     * @return Extension[]
+     */
+    public static function defaultExtensions(): array
     {
         return [
             new OnlyIf(),
@@ -83,12 +90,12 @@ class Application extends ConsoleApplication
         ];
     }
 
-    public static function defaultFile()
+    public static function defaultFile(): string
     {
         return '.env';
     }
 
-    public static function defaultDistributionFile()
+    public static function defaultDistributionFile(): string
     {
         return '.env.dist';
     }

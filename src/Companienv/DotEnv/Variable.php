@@ -4,8 +4,8 @@ namespace Companienv\DotEnv;
 
 class Variable
 {
-    private $name;
-    private $value;
+    private string $name;
+    private ?string $value;
 
     public function __construct(string $name, string $value = null)
     {
@@ -20,10 +20,10 @@ class Variable
 
     public function hasValue(): bool
     {
-        return !empty($this->value);
+        return $this->value !== null;
     }
 
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
