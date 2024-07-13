@@ -3,6 +3,7 @@
 namespace Companienv\DotEnv;
 
 use Companienv\IO\FileSystem\FileSystem;
+use Symfony\Component\Dotenv\Dotenv;
 
 class Parser
 {
@@ -37,10 +38,11 @@ class Parser
                     $blocks[] = $block = new Block();
                 }
 
-                $block->addVariable(new Variable(
-                    substr($line, 0, $firstEquals),
-                    substr($line, $firstEquals + 1)
-                ));
+                $parsedLine = (new Dotenv())->parse($line);
+                $name = (string)key($parsedLine);
+                $value = (string)current($parsedLine);
+
+                $block->addVariable(new Variable($name, $value));
             } else {
                 throw new \InvalidArgumentException(sprintf(
                     'The line %d of the file %s is invalid: %s',

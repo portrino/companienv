@@ -77,11 +77,11 @@ class Block
      */
     public function getVariablesInBlock(array $variables): array
     {
-        $blockVariableNames = array_map(function (Variable $variable) {
+        $blockVariableNames = array_map(static function (Variable $variable) {
             return $variable->getName();
         }, $this->variables);
 
-        return array_filter($variables, function (Variable $variable) use ($blockVariableNames) {
+        return array_filter($variables, static function (Variable $variable) use ($blockVariableNames) {
             return in_array($variable->getName(), $blockVariableNames, true);
         });
     }
@@ -112,7 +112,7 @@ class Block
     {
         foreach ($this->attributes as $attribute) {
             if (
-                $attribute->getName() == $name
+                $attribute->getName() === $name
                 && (
                     $forVariable === null
                     || in_array($forVariable->getName(), $attribute->getVariableNames(), true)
