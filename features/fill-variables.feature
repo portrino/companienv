@@ -108,6 +108,34 @@ Feature:
     A_BASE64_VALUE=abc123=
     """
 
+  Scenario: It quotes variable values containing whitespaces
+    Given the file ".env.dist" contains:
+    """
+    ## Something
+    MY_VARIABLE=
+    """
+    When I run the companion with the following answers:
+        | Let's fix this? (y) | y                       |
+        | MY_VARIABLE ?       | Some string with spaces |
+    And the file ".env" should contain:
+    """
+    MY_VARIABLE='Some string with spaces'
+    """
+
+  Scenario: It quotes variable values containing special characters
+    Given the file ".env.dist" contains:
+    """
+    ## Something
+    MY_VARIABLE=
+    """
+    When I run the companion with the following answers:
+        | Let's fix this? (y) | y                              |
+        | MY_VARIABLE ?       | S0me$Value"With^Sp3cial&Chars% |
+    And the file ".env" should contain:
+    """
+    MY_VARIABLE='S0me$Value"With^Sp3cial&Chars%'
+    """
+
   Scenario: It displays correctly boolean with 1 and 0
     Given the file ".env.dist" contains:
     """

@@ -6,12 +6,13 @@ use Companienv\DotEnv\Block;
 use Companienv\DotEnv\File;
 use Companienv\DotEnv\MissingVariable;
 use Companienv\DotEnv\Parser;
+use Companienv\DotEnvEditor\DotenvReader;
+use Companienv\DotEnvEditor\DotenvWriter;
+use Companienv\DotEnvEditor\Workers\Formatters\Formatter;
+use Companienv\DotEnvEditor\Workers\Parsers\ParserV3;
 use Companienv\IO\FileSystem\FileSystem;
 use Companienv\IO\Interaction;
-use Jackiedo\DotenvEditor\DotenvReader;
-use Jackiedo\DotenvEditor\DotenvWriter;
-use Jackiedo\DotenvEditor\Workers\Formatters\Formatter;
-use Jackiedo\DotenvEditor\Workers\Parsers\ParserV3;
+use Symfony\Component\Dotenv\Dotenv;
 
 class Companion
 {
@@ -97,6 +98,7 @@ class Companion
 
         $writer = new DotenvWriter(new Formatter());
         $reader = (new DotenvReader(new ParserV3()))->load($this->envFileName);
+
         foreach ($reader->entries(true) as $entry) {
             if (isset($entry['parsed_data'])) {
                 switch ($entry['parsed_data']['type']) {
@@ -109,7 +111,7 @@ class Companion
                     case 'setter':
                         $writer->appendSetter(
                             $entry['parsed_data']['key'],
-                            trim($entry['parsed_data']['value'], '"'),
+                            $entry['parsed_data']['value'],
                             $entry['parsed_data']['comment'],
                             $entry['parsed_data']['export']
                         );
@@ -124,7 +126,7 @@ class Companion
             $writer->appendSetter($name, $value);
         }
 
-        $this->fileSystem->write($this->envFileName, $writer->getBuffer(false));
+        $this->fileSystem->write($this->envFileName, $writer->getBufferAsString());
     }
 
     /**
@@ -137,7 +139,7 @@ class Companion
 
         foreach ($this->reference->getBlocks() as $block) {
             foreach ($block->getVariables() as $variable) {
-                $currentValue = isset($variablesInFile[$variable->getName()]) ? $variablesInFile[$variable->getName()] : null;
+                $currentValue = $variablesInFile[$variable->getName()] ?? null;
 
                 if ($this->extension->isVariableRequiringValue($this, $block, $variable, $currentValue) === Extension::VARIABLE_REQUIRED) {
                     $missingVariables[$variable->getName()] = new MissingVariable($variable, $currentValue);
@@ -155,7 +157,7 @@ class Companion
     {
         $variablesInFile = [];
         if ($this->fileSystem->exists($this->envFileName)) {
-            $dotEnv = new \Symfony\Component\Dotenv\Dotenv();
+            $dotEnv = new Dotenv();
             $variablesInFile = $dotEnv->parse($this->fileSystem->getContents($this->envFileName), $this->envFileName);
         }
 
