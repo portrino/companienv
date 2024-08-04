@@ -1,5 +1,7 @@
 [![Latest Stable Version](https://poser.pugx.org/portrino/companienv/v/stable)](https://packagist.org/packages/portrino/companienv)
-![CI](https://github.com/portrino/companienv/actions/workflows/ci.yml/badge.svg)
+[![License](https://img.shields.io/packagist/l/portrino/companienv.svg?style=flat-square)](LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/portrino/companienv.svg?style=flat-square)](https://packagist.org/packages/portrino/companienv)
+[![Tests](https://github.com/portrino/companienv/actions/workflows/ci.yml/badge.svg)](https://github.com/portrino/companienv/actions)
 
 # Companienv
 
@@ -181,3 +183,10 @@ $application->registerExtension(new class() implements Extension {
 });
 $application->run();
 ```
+
+## Acknowledgements & Credits
+
+This project is inspired by and based on these amazing open-source projects:
+
+- [`jackiedo/dotenv-editor`](https://github.com/JackieDo/Laravel-Dotenv-Editor)
+- [`sroze/companienv`](https://github.com/sroze/companienv)
