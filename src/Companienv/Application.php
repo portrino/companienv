@@ -47,7 +47,7 @@ class Application extends ConsoleApplication
                 $this->addOption('file', null, InputOption::VALUE_REQUIRED, 'Name of the file used for the values', Application::defaultFile());
             }
 
-            protected function execute(InputInterface $input, OutputInterface $output)
+            protected function execute(InputInterface $input, OutputInterface $output): int
             {
                 $callable = $this->callable;
 
