@@ -75,7 +75,7 @@ class DotenvReader implements ReaderInterface
             return $entries;
         }
 
-        return array_map(function ($info) {
+        return array_map(function (array $info) {
             $info['parsed_data'] = $this->parser->parseEntry($info['raw_data']);
 
             return $info;
@@ -91,7 +91,7 @@ class DotenvReader implements ReaderInterface
     {
         $entries = $this->getEntriesFromFile();
 
-        return array_reduce($entries, function ($carry, $entry) {
+        return array_reduce($entries, function (array $carry, array $entry) {
             $data = $this->parser->parseEntry($entry['raw_data']);
 
             if ($data['type'] === 'setter') {

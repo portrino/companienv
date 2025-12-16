@@ -13,13 +13,13 @@ use Companienv\DotEnvEditor\Exceptions\InvalidValueException;
  */
 class ParserV3 extends Parser implements ParserInterface
 {
-    private const INITIAL_STATE         = 0;
-    private const UNQUOTED_STATE        = 1;
-    private const SINGLE_QUOTED_STATE   = 2;
-    private const DOUBLE_QUOTED_STATE   = 3;
-    private const ESCAPE_SEQUENCE_STATE = 4;
-    private const WHITESPACE_STATE      = 5;
-    private const COMMENT_STATE         = 6;
+    private const int INITIAL_STATE         = 0;
+    private const int UNQUOTED_STATE        = 1;
+    private const int SINGLE_QUOTED_STATE   = 2;
+    private const int DOUBLE_QUOTED_STATE   = 3;
+    private const int ESCAPE_SEQUENCE_STATE = 4;
+    private const int WHITESPACE_STATE      = 5;
+    private const int COMMENT_STATE         = 6;
 
     /**
      * Parse setter data into array of value, comment information.
@@ -39,7 +39,7 @@ class ParserV3 extends Parser implements ParserInterface
         $dataChars     = str_split($data);
         $parseInfoInit = ['', '', self::INITIAL_STATE]; // 1st element is value, 2nd element is comment, 3rd element is parsing state
 
-        $result = array_reduce($dataChars, function ($parseInfo, $char) use ($data) {
+        $result = array_reduce($dataChars, function (array $parseInfo, string $char) use ($data) {
             switch ($parseInfo[2]) {
                 case self::INITIAL_STATE:
                     if ($char === '\'') {
@@ -150,7 +150,7 @@ class ParserV3 extends Parser implements ParserInterface
      *
      * @return string
      */
-    protected function UTF8Substr(string $input, int $start, int $length = null): string
+    protected function UTF8Substr(string $input, int $start, ?int $length = null): string
     {
         return mb_substr($input, $start, $length, 'UTF-8');
     }

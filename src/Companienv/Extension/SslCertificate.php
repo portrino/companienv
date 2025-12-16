@@ -18,7 +18,7 @@ class SslCertificate implements Extension
     /**
      * {@inheritdoc}
      */
-    public function getVariableValue(Companion $companion, Block $block, Variable $variable)
+    public function getVariableValue(Companion $companion, Block $block, Variable $variable): ?string
     {
         if (null === ($attribute = $block->getAttribute('ssl-certificate', $variable))) {
             return null;
@@ -28,12 +28,18 @@ class SslCertificate implements Extension
             return $this->populatedVariables[$variable->getName()];
         }
 
-        if (!$companion->askConfirmation(sprintf(
-            'Variables %s represents an SSL certificate. Do you want to automatically generate them? (y) ',
-            implode(' and ', array_map(function ($variable) {
-                return '<comment>' . $variable . '</comment>';
-            }, $attribute->getVariableNames()))
-        ))) {
+        if (!$companion->askConfirmation(
+            sprintf(
+                'Variables %s represents an SSL certificate. Do you want to automatically generate them? (y) ',
+                implode(
+                    ' and ',
+                    array_map(
+                        static fn(string $variable) => '<comment>' . $variable . '</comment>',
+                        $attribute->getVariableNames()
+                    )
+                )
+            )
+        )) {
             // Ensure we don't ask anymore for this variable pair
             foreach ($attribute->getVariableNames() as $variableName) {
                 $this->populatedVariables[$variableName] = null;
@@ -64,7 +70,7 @@ class SslCertificate implements Extension
     /**
      * {@inheritdoc}
      */
-    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null): int
+    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, ?string $currentValue = null): int
     {
         if (null === ($attribute = $block->getAttribute('ssl-certificate', $variable))) {
             return Extension::ABSTAIN;

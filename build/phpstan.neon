@@ -1,15 +1,20 @@
 includes:
-	- %currentWorkingDirectory%/.build/vendor/phpstan/phpstan-strict-rules/rules.neon
-	- %currentWorkingDirectory%/.build/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+	- ../.build/vendor/phpstan/phpstan-strict-rules/rules.neon
+	- ../.build/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+	- ../.build/vendor/spaze/phpstan-disallowed-calls/extension.neon
+	- ../.build/vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+	- ../.build/vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+	- ../.build/vendor/spaze/phpstan-disallowed-calls/disallowed-insecure-calls.neon
+	- ../.build/vendor/spaze/phpstan-disallowed-calls/disallowed-loose-calls.neon
+	- ../.build/vendor/tomasvotruba/type-coverage/config/extension.neon
 
 parameters:
   level: 8
 
   paths:
-    - %currentWorkingDirectory%/spec
-    - %currentWorkingDirectory%/src
-    - %currentWorkingDirectory%/tests
+    - ../spec
+    - ../src
+    - ../tests
 
   ignoreErrors:
     - '#Class .* extends generic class PhpSpec\\ObjectBehavior but does not specify its types: TKey, TValue#'
-    - '#Property class@anonymous.*callable has no type specified.*#'

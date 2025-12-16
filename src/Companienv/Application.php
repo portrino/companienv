@@ -27,17 +27,20 @@ class Application extends ConsoleApplication
      * @param string $rootDirectory
      * @param Extension[]|null $extensions
      */
-    public function __construct(string $rootDirectory, array $extensions = null)
+    public function __construct(string $rootDirectory, ?array $extensions)
     {
         parent::__construct('Companienv', '0.0.x-dev');
 
         $this->rootDirectory = $rootDirectory;
         $this->extensions = $extensions ?? self::defaultExtensions();
 
-        $this->add(new class ([$this, 'companion'], 'companion') extends Command {
+        $this->addCommand(new class ([$this, 'companion'], 'companion') extends Command {
+            /**
+             * @var callable $callable
+             */
             private $callable;
 
-            public function __construct(callable $callable, $name)
+            public function __construct(callable $callable, ?string $name)
             {
                 parent::__construct($name);
 
