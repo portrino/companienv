@@ -12,7 +12,7 @@ class FileToPropagate implements Extension
     /**
      * {@inheritdoc}
      */
-    public function getVariableValue(Companion $companion, Block $block, Variable $variable)
+    public function getVariableValue(Companion $companion, Block $block, Variable $variable): ?string
     {
         if (null === ($attribute = $block->getAttribute('file-to-propagate', $variable))) {
             return null;
@@ -44,7 +44,7 @@ class FileToPropagate implements Extension
     /**
      * {@inheritdoc}
      */
-    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null): int
+    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, ?string $currentValue = null): int
     {
         if (null === ($attribute = $block->getAttribute('file-to-propagate', $variable))) {
             return Extension::ABSTAIN;

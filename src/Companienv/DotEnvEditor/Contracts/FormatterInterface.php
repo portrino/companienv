@@ -12,7 +12,7 @@ interface FormatterInterface
      *
      * @return string
      */
-    public function formatKey(string $key, bool $export = false);
+    public function formatKey(string $key, bool $export = false): string;
 
     /**
      * Build an setter from the individual components for writing.
@@ -24,7 +24,7 @@ interface FormatterInterface
      *
      * @return string
      */
-    public function formatSetter(string $key, ?string $value = null, ?string $comment = null, bool $export = false);
+    public function formatSetter(string $key, ?string $value = null, ?string $comment = null, bool $export = false): string;
 
     /**
      * Formatting the comment to writing.
@@ -33,5 +33,5 @@ interface FormatterInterface
      *
      * @return string
      */
-    public function formatComment(?string $comment);
+    public function formatComment(string $comment): string;
 }

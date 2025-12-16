@@ -108,7 +108,7 @@ class Block
      *
      * @return Attribute|null
      */
-    public function getAttribute(string $name, Variable $forVariable = null): ?Attribute
+    public function getAttribute(string $name, ?Variable $forVariable = null): ?Attribute
     {
         foreach ($this->attributes as $attribute) {
             if (

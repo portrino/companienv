@@ -19,21 +19,24 @@
     }
   ],
   "require": {
-    "php": ">=8.0",
-    "symfony/console": "^6.0 || ^7.0",
-    "symfony/dotenv": "^6.0 || ^7.0",
-    "symfony/process": "^6.0 || ^7.0"
+    "php": ">=8.3 <=8.5.99",
+    "symfony/console": "^7.4 || ^8.0",
+    "symfony/dotenv": "^7.4 || ^8.0",
+    "symfony/process": "^7.4 || ^8.0"
   },
   "require-dev": {
-    "behat/behat": "^3.14",
+    "behat/behat": "^3.29",
     "composer/composer": "^2.0",
     "ergebnis/composer-normalize": "^2.43",
     "friendsofphp/php-cs-fixer": "^3.47",
-    "phpspec/phpspec": "^7.0",
-    "phpstan/phpstan": "^1.10",
-    "phpstan/phpstan-deprecation-rules": "^1.1",
-    "phpstan/phpstan-strict-rules": "^1.5",
-    "typo3/coding-standards": "^0.7"
+    "phpspec/phpspec": "^8.1",
+    "phpstan/phpstan": "^2.0",
+    "phpstan/phpstan-deprecation-rules": "^2.0",
+    "phpstan/phpstan-strict-rules": "^2.0",
+    "spaze/phpstan-disallowed-calls": "^4.0",
+    "tomasvotruba/cognitive-complexity": "^1.0",
+    "tomasvotruba/type-coverage": "^2.0",
+    "typo3/coding-standards": "^0.8"
   },
   "replace": {
     "sroze/companienv": "*"

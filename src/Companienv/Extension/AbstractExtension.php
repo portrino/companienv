@@ -15,7 +15,7 @@ class AbstractExtension implements Extension
     /**
      * {@inheritdoc}
      */
-    public function getVariableValue(Companion $companion, Block $block, Variable $variable)
+    public function getVariableValue(Companion $companion, Block $block, Variable $variable): ?string
     {
         return null;
     }
@@ -23,7 +23,7 @@ class AbstractExtension implements Extension
     /**
      * {@inheritdoc}
      */
-    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, string $currentValue = null): int
+    public function isVariableRequiringValue(Companion $companion, Block $block, Variable $variable, ?string $currentValue = null): int
     {
         return Extension::ABSTAIN;
     }

@@ -149,7 +149,7 @@ class DotenvWriter implements WriterInterface
             'comment' => (string)$comment,
         ];
 
-        array_walk($this->buffer, static function (&$entry, $index) use ($key, $data) {
+        array_walk($this->buffer, static function (array &$entry, int $index) use ($key, $data) {
             if ($entry['type'] === 'setter' && $entry['key'] === $key) {
                 $entry = array_merge($entry, $data);
             }
@@ -172,7 +172,7 @@ class DotenvWriter implements WriterInterface
             'comment' => (string)$comment,
         ];
 
-        array_walk($this->buffer, static function (&$entry, $index) use ($key, $data) {
+        array_walk($this->buffer, static function (array &$entry, int $index) use ($key, $data) {
             if ($entry['type'] === 'setter' && $entry['key'] === $key) {
                 $entry = array_merge($entry, $data);
             }
@@ -195,7 +195,7 @@ class DotenvWriter implements WriterInterface
             'export' => $state,
         ];
 
-        array_walk($this->buffer, static function (&$entry, $index) use ($key, $data) {
+        array_walk($this->buffer, static function (array &$entry, int $index) use ($key, $data) {
             if ($entry['type'] === 'setter' && $entry['key'] === $key) {
                 $entry = array_merge($entry, $data);
             }
@@ -213,9 +213,11 @@ class DotenvWriter implements WriterInterface
      */
     public function deleteSetter(string $key): DotenvWriter
     {
-        $this->buffer = array_values(array_filter($this->buffer, static function ($entry, $index) use ($key) {
-            return $entry['type'] !== 'setter' || $entry['key'] !== $key;
-        }, ARRAY_FILTER_USE_BOTH));
+        $this->buffer = array_values(
+            array_filter($this->buffer, static function (array $entry, int $index) use ($key) {
+                return $entry['type'] !== 'setter' || $entry['key'] !== $key;
+            }, ARRAY_FILTER_USE_BOTH)
+        );
 
         return $this;
     }
@@ -253,12 +255,12 @@ class DotenvWriter implements WriterInterface
      * Tests file for writability. If the file doesn't exist, check
      * the parent directory for writability so the file can be created.
      *
-     * @param mixed $filePath
+     * @param string $filePath
      *
      *
      * @throws UnableWriteToFileException
      */
-    protected function ensureFileIsWritable($filePath): void
+    protected function ensureFileIsWritable(string $filePath): void
     {
         if ((is_file($filePath) && !is_writable($filePath)) || (!is_file($filePath) && !is_writable(dirname($filePath)))) {
             throw new UnableWriteToFileException(sprintf('Unable to write to the file at %s.', $filePath));
@@ -272,13 +274,13 @@ class DotenvWriter implements WriterInterface
      */
     protected function buildTextContent(): string
     {
-        $data = array_map(function ($entry) {
+        $data = array_map(function (array $entry) {
             if ($entry['type'] === 'setter') {
                 return $this->formatter->formatSetter($entry['key'], $entry['value'], $entry['comment'], $entry['export']);
             }
 
             if ($entry['type'] === 'comment') {
-                return $this->formatter->formatComment($entry['comment']);
+                return $this->formatter->formatComment((string)$entry['comment']);
             }
 
             return '';

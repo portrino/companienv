@@ -40,13 +40,13 @@ class Formatter implements FormatterInterface
     /**
      * Formatting the comment to writing.
      *
-     * @param ?string $comment
+     * @param string $comment
      *
      * @return string
      */
-    public function formatComment(?string $comment): string
+    public function formatComment(string $comment): string
     {
-        $comment = rtrim(ltrim((string)$comment, '# '), ' ');
+        $comment = rtrim(ltrim($comment, '# '), ' ');
         $comment = preg_replace('/(\r\n|\n|\r)/', ' ', $comment);
 
         return ($comment !== '') ? "# {$comment}" : '';
@@ -65,7 +65,7 @@ class Formatter implements FormatterInterface
     public function formatSetter(string $key, ?string $value = null, ?string $comment = null, bool $export = false): string
     {
         $key   = $this->formatKey($key, $export);
-        $value = $this->formatValue($value, $this->formatComment($comment));
+        $value = $this->formatValue($value, $this->formatComment((string)$comment));
 
         return "{$key}={$value}";
     }
