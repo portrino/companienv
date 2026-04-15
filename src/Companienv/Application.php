@@ -27,7 +27,7 @@ class Application extends ConsoleApplication
      * @param string $rootDirectory
      * @param Extension[]|null $extensions
      */
-    public function __construct(string $rootDirectory, ?array $extensions)
+    public function __construct(string $rootDirectory, ?array $extensions = null)
     {
         parent::__construct('Companienv', '0.0.x-dev');
 
@@ -40,7 +40,7 @@ class Application extends ConsoleApplication
              */
             private $callable;
 
-            public function __construct(callable $callable, ?string $name)
+            public function __construct(callable $callable, ?string $name = null)
             {
                 parent::__construct($name);
 

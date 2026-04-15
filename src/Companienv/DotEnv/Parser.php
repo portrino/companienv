@@ -61,9 +61,24 @@ class Parser
         $variableNameRegex = '[A-Z0-9_]+';
         $valueRegex = '[^\) ]+';
 
+        /**
+         * @var array{0: non-empty-string, 1: non-empty-string, 2: string, 3?: non-empty-string, 4?: non-empty-string, 5?: non-empty-string, 6?: non-empty-string } $matches
+         *
+         * @example [0 => 'attributeName(ENV_VAR_FOO):(ENV_VAR_BAR=value)', 1 => 'attributeName', 2 => 'ENV_VAR_FOO', 3 => 'ENV_VAR_FOO', 4 => ':(ENV_VAR_BAR=value)', 5 => 'ENV_VAR_BAR=value', 6 => 'ENV_VAR_BAR=value']
+         * @example [0 => 'attributeName(ENV_VAR_FOO)', 1 => 'attributeName', 2 => 'ENV_VAR_FOO', 3 => 'ENV_VAR_FOO']
+         * @example [0 => 'attributeName(ENV_VAR_FOO ENV_VAR_BAR)', 1 => 'attributeName', 2 => 'ENV_VAR_FOO ENV_VAR_BAR', 3 => 'ENV_VAR_FOO']
+         * @example [0 => 'attributeName()', 1 => 'attributeName', 2 => '']
+         */
+        $matches = [];
         if (preg_match('/^([a-z0-9-]+)\(((' . $variableNameRegex . ' ?)*)\)(:\(((' . $variableNameRegex . '=' . $valueRegex . ' ?)*)\))?$/', $string, $matches) === false) {
             throw new \RuntimeException(sprintf(
                 'Unable to parse the given attribute: %s',
+                $string
+            ));
+        }
+        if (!isset($matches[1], $matches[2])) {
+            throw new \RuntimeException(sprintf(
+                'The given attribute is missing required parts: %s',
                 $string
             ));
         }
